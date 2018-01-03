@@ -15,8 +15,6 @@ composer require webit/message-bus-sf-process=^1.0.0
 To use both ***ProcessPublisher*** or ***ProcessConsumer*** instance of ***ProcessFactory*** is needed.
 
 ```php
-
-use Webit\MessageBus\Infrastructure\Symfony\Process\Launcher\Exception\UnsupportedMessageTypeException;
 use Webit\MessageBus\Message;
 use Symfony\Component\Process\Process;
 
@@ -30,8 +28,8 @@ class MyProcessFactory implements ProcessFactory
         return new Process(
             sprintf(
                 '/usr/local/my-binary.php %s %s',
-                $message->type(),
-                $message->content()
+                escapeshellarg($message->type()),
+                escapeshellarg($message->content())
             )
         );
     }
@@ -43,7 +41,6 @@ class MyProcessFactory implements ProcessFactory
 To run process synchronously use ***SynchronousProcessLauncher***
 
 ```php
-
 use Webit\MessageBus\Infrastructure\Symfony\Process\Launcher\SynchronousProcessLauncher;
 
 $myFactory = new MyProcessFactory();
@@ -55,7 +52,6 @@ $launcher = new SynchronousProcessLauncher($myFactory);
 To run process asynchronously use ***AsynchronousProcessLauncher***
 
 ```php
-
 use Webit\MessageBus\Infrastructure\Symfony\Process\Launcher\ParallelProcessManager;
 use Webit\MessageBus\Infrastructure\Symfony\Process\Launcher\AsynchronousProcessLauncher;
 
@@ -72,7 +68,6 @@ $launcher = new AsynchronousProcessLauncher(
 Configured ***ProcessLauncher*** can be used with ***ProcessPublisher***
 
 ```php
-
 use Webit\MessageBus\Infrastructure\Symfony\Process\ProcessPublisher;
 use Webit\MessageBus\Message;
 
@@ -86,7 +81,6 @@ $publisher->publish(new Message('type', 'content'));
 Configured ***ProcessLauncher*** can be used with ***ProcessConsumer***
 
 ```php
-
 use Webit\MessageBus\Infrastructure\Symfony\Process\ProcessConsumer;
 use Webit\MessageBus\Message;
 
